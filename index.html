@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Procesando...</title>
+  <script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+    const supabase = createClient(
+      "https://otvcwvnlndxtzzmeqtcw.supabase.co",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im90dmN3dm5sbmR4dHp6bWVxdGN3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc3NTg0OTQsImV4cCI6MjA2MzMzNDQ5NH0.psGUAZjKc_Ic9CFeumOIwS5DNWkgtABNZlcN0iig0cE"
+    );
+
+    window.addEventListener("DOMContentLoaded", async () => {
+      const params = new URLSearchParams(window.location.search);
+      const id_param = params.get("id");
+
+      const id_int = parseInt(id_param, 10);
+      // Insertar registro
+      const { error } = await supabase
+        .from("Sugerencias")
+        .update([{
+          'Estado':true,
+        }]
+        .eq('id', id_int)
+      );
+
+      if (error) {
+        console.error("❌ Error al insertar:", error);
+      } else {
+        console.log("✅ Registro insertado y cerrando página...");
+      }
+
+      // Intentar cerrar
+      window.close();
+    });
+  </script>
+</head>
+<body>
+  <p>Procesando y cerrando...</p>
+</body>
+</html>
