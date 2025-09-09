@@ -16,13 +16,40 @@
       const id_param = params.get("id");
       const id_int = parseInt(id_param, 10);
 
-      const { error } = await supabase
+      // 1. Consultar si ya está en true
+      const { data, error } = await supabase
+        .from("Sugerencias")
+        .select("Estado")
+        .eq("id", id_int)
+        .single(); // porque esperas solo un registro
+
+      if (error) {
+        console.error("❌ Error al consultar:", error);
+        document.querySelector(".message").innerHTML = `
+          ❌ Hubo un error al verificar el registro.<br>
+          Puede cerrar esta pestaña manualmente.
+        `;
+        return;
+      }
+
+      if (data.Estado === true) {
+        console.log("⚡ Ya estaba en true, cerrando...");
+        window.close();
+        document.querySelector(".message").innerHTML = `
+          ⚡ Este registro ya había sido procesado.<br>
+          Puede cerrar esta pestaña manualmente.
+        `;
+        return;
+      }
+
+      // 2. Si no estaba en true → actualizar
+      const { error: updateError } = await supabase
         .from("Sugerencias")
         .update({ Estado: true })
         .eq("id", id_int);
 
-      if (error) {
-        console.error("❌ Error al actualizar:", error);
+      if (updateError) {
+        console.error("❌ Error al actualizar:", updateError);
         document.querySelector(".message").innerHTML = `
           ❌ Hubo un error al procesar el registro.<br>
           Puede cerrar esta pestaña manualmente.
@@ -77,4 +104,5 @@
   <p class="message">Procesando... Esta página se cerrará cuando el proceso termine.</p>
 </body>
 </html>
+
 
