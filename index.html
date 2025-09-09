@@ -27,10 +27,14 @@
         console.error("❌ Error al consultar:", error);
         document.querySelector(".message").innerHTML = `
           ❌ Hubo un error al verificar el registro.<br>
-          Puede cerrar esta pestaña manualmente.
+          Esta pestaña se cerrará automáticamente.
         `;
+        setTimeout(() => {
+          window.close();
+        }, 2000); // intenta cerrarse después de 2s
         return;
       }
+
 
       if (data.Estado === true) {
         console.log("⚡ Ya estaba en true, cerrando...");
@@ -104,5 +108,6 @@
   <p class="message">Procesando... Esta página se cerrará cuando el proceso termine.</p>
 </body>
 </html>
+
 
 
