@@ -16,23 +16,30 @@
       const id_param = params.get("id");
 
       const id_int = parseInt(id_param, 10);
-      // Insertar registro
+
+      // Actualizar registro
       const { error } = await supabase
         .from("Sugerencias")
-        .update([{
-          'Estado':true,
-        }]
-        .eq('id', id_int)
-      );
+        .update({ Estado: true })
+        .eq("id", id_int);
 
       if (error) {
-        console.error("❌ Error al insertar:", error);
+        console.error("❌ Error al actualizar:", error);
+        document.body.innerHTML = `
+          <p>❌ Hubo un error al procesar el registro.</p>
+          <p>Puede cerrar esta pestaña manualmente.</p>
+        `;
       } else {
-        console.log("✅ Registro insertado y cerrando página...");
+        console.log("✅ Registro actualizado...");
+        // Intentar cerrar, y si no se puede, mostrar mensaje
+        setTimeout(() => {
+          window.close();
+          document.body.innerHTML = `
+            <p>✅ Registro procesado.</p>
+            <p>Puede cerrar esta pestaña manualmente.</p>
+          `;
+        }, 2000);
       }
-
-      // Intentar cerrar
-      window.close();
     });
   </script>
 </head>
