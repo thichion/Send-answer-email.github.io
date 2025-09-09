@@ -14,10 +14,8 @@
     window.addEventListener("DOMContentLoaded", async () => {
       const params = new URLSearchParams(window.location.search);
       const id_param = params.get("id");
-
       const id_int = parseInt(id_param, 10);
 
-      // Actualizar registro
       const { error } = await supabase
         .from("Sugerencias")
         .update({ Estado: true })
@@ -25,25 +23,58 @@
 
       if (error) {
         console.error("❌ Error al actualizar:", error);
-        document.body.innerHTML = `
-          <p>❌ Hubo un error al procesar el registro.</p>
-          <p>Puede cerrar esta pestaña manualmente.</p>
+        document.querySelector(".message").innerHTML = `
+          ❌ Hubo un error al procesar el registro.<br>
+          Puede cerrar esta pestaña manualmente.
         `;
       } else {
         console.log("✅ Registro actualizado...");
-        // Intentar cerrar, y si no se puede, mostrar mensaje
         setTimeout(() => {
           window.close();
-          document.body.innerHTML = `
-            <p>✅ Registro procesado.</p>
-            <p>Puede cerrar esta pestaña manualmente.</p>
+          document.querySelector(".message").innerHTML = `
+            ✅ Registro procesado.<br>
+            Puede cerrar esta pestaña manualmente.
           `;
+          document.querySelector(".loader").style.display = "none";
         }, 2000);
       }
     });
   </script>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #007BFF; /* Azul */
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      flex-direction: column;
+    }
+    .loader {
+      border: 6px solid rgba(255, 255, 255, 0.3);
+      border-top: 6px solid white;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin-bottom: 15px;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .message {
+      font-size: 18px;
+      max-width: 80%;
+    }
+  </style>
 </head>
 <body>
-  <p>Procesando y cerrando...</p>
+  <div class="loader"></div>
+  <p class="message">Procesando... Esta página se cerrará cuando el proceso termine.</p>
 </body>
 </html>
+
